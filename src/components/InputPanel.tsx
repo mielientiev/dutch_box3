@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
-import { UserInputs, TaxSystemsConfig } from '../types';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { UserInputs, TaxSystemsConfig, GrowthConfig } from '../types';
+import { validateYearRange, getYearsFromRange, SP500_MIN_YEAR, SP500_MAX_YEAR } from '../data/sp500Returns';
 
 interface InputPanelProps {
   inputs: UserInputs;
@@ -13,12 +14,16 @@ function NumberInput({
   value,
   onChange,
   displayValue,
+  className,
+  disabled,
   ...props
 }: {
   value: number;
   onChange: (value: number) => void;
   displayValue?: number;
-} & Omit<React.ComponentProps<'input'>, 'value' | 'onChange'>) {
+  className?: string;
+  disabled?: boolean;
+} & Omit<React.ComponentProps<'input'>, 'value' | 'onChange' | 'className' | 'disabled'>) {
   const effectiveValue = displayValue !== undefined ? displayValue : value;
   const formattedValue = Number(effectiveValue.toPrecision(12));
   const [localValue, setLocalValue] = useState<string>(String(formattedValue));
@@ -60,7 +65,8 @@ function NumberInput({
       onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
-      className="input-field"
+      className={className || "input-field"}
+      disabled={disabled}
       {...props}
     />
   );
@@ -78,6 +84,25 @@ export function InputPanel({
   const updateInput = (field: keyof UserInputs, value: number) => {
     onInputsChange({ ...inputs, [field]: value });
   };
+
+  const updateGrowthConfig = (growth: GrowthConfig) => {
+    if (growth.mode === 'sp500') {
+      const years = getYearsFromRange(growth.startYear, growth.endYear);
+      onInputsChange({ ...inputs, growth, years });
+    } else {
+      onInputsChange({ ...inputs, growth });
+    }
+  };
+
+  const growthValidation = useMemo(() => {
+    if (inputs.growth.mode === 'sp500') {
+      return validateYearRange(inputs.growth.startYear, inputs.growth.endYear);
+    }
+    return { valid: true } as const;
+  }, [inputs.growth]);
+
+  const isSimulationDisabled = !growthValidation.valid;
+  const isSP500Mode = inputs.growth.mode === 'sp500';
 
   const updateSystem1Config = (field: keyof TaxSystemsConfig['system1'], value: number) => {
     onConfigChange({
@@ -135,28 +160,110 @@ export function InputPanel({
         </div>
 
         <div className="space-y-2">
-          <label className="label">Annual Growth Rate (%)</label>
-          <NumberInput
-            value={inputs.annualGrowthRate}
-            onChange={(v) => updateInput('annualGrowthRate', v / 100)}
-            displayValue={inputs.annualGrowthRate * 100}
-            min="0"
-            max="100"
-            step="0.1"
-            placeholder="7.0"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="label">Years</label>
+          <label className={`label ${isSP500Mode ? 'text-slate-500' : ''}`}>
+            Years {isSP500Mode && <span className="text-xs">(from date range)</span>}
+          </label>
           <NumberInput
             value={inputs.years}
             onChange={(v) => updateInput('years', v)}
             min="1"
-            max="50"
+            max="99"
             placeholder="10"
+            disabled={isSP500Mode}
+            className={isSP500Mode ? 'input-field opacity-50 cursor-not-allowed' : 'input-field'}
           />
         </div>
+      </div>
+
+      {/* Growth Rate Section */}
+      <div className="mb-8">
+        <label className="label mb-3 block">Growth Rate</label>
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => updateGrowthConfig({ mode: 'fixed', annualGrowthRate: 0.07 })}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              inputs.growth.mode === 'fixed'
+                ? 'bg-violet-500 text-white'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            Fixed Rate
+          </button>
+          <button
+            onClick={() => updateGrowthConfig({ mode: 'sp500', startYear: 2010, endYear: 2020 })}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              inputs.growth.mode === 'sp500'
+                ? 'bg-violet-500 text-white'
+                : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+            }`}
+          >
+            S&P 500 Historical
+          </button>
+        </div>
+
+        {inputs.growth.mode === 'fixed' ? (
+          <div className="space-y-2">
+            <label className="label text-slate-400">Annual Growth Rate (%)</label>
+            <NumberInput
+              value={inputs.growth.annualGrowthRate}
+              onChange={(v) => updateGrowthConfig({ mode: 'fixed', annualGrowthRate: v / 100 })}
+              displayValue={inputs.growth.annualGrowthRate * 100}
+              min="-100"
+              max="100"
+              step="0.1"
+              placeholder="7.0"
+            />
+          </div>
+        ) : (() => {
+          const sp500Config = inputs.growth;
+          const yearOptions = Array.from(
+            { length: SP500_MAX_YEAR - SP500_MIN_YEAR + 1 },
+            (_, i) => SP500_MIN_YEAR + i
+          );
+          return (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="label text-slate-400">Start Year</label>
+                  <select
+                    value={sp500Config.startYear}
+                    onChange={(e) => updateGrowthConfig({
+                      mode: 'sp500',
+                      startYear: Number(e.target.value),
+                      endYear: sp500Config.endYear
+                    })}
+                    className="input-field"
+                  >
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="label text-slate-400">End Year</label>
+                  <select
+                    value={sp500Config.endYear}
+                    onChange={(e) => updateGrowthConfig({
+                      mode: 'sp500',
+                      startYear: sp500Config.startYear,
+                      endYear: Number(e.target.value)
+                    })}
+                    className="input-field"
+                  >
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              {!growthValidation.valid && (
+                <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+                  {growthValidation.error}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
       <button
@@ -274,7 +381,10 @@ export function InputPanel({
 
       <button
         onClick={onRunSimulation}
-        className="btn-primary w-full mt-8 flex items-center justify-center gap-2"
+        disabled={isSimulationDisabled}
+        className={`w-full mt-8 flex items-center justify-center gap-2 ${
+          isSimulationDisabled ? 'btn-secondary opacity-50 cursor-not-allowed' : 'btn-primary'
+        }`}
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />

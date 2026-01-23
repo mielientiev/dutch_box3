@@ -75,6 +75,6 @@ export const defaultTaxSystemsConfig: TaxSystemsConfig = {
 export const defaultUserInputs: UserInputs = {
   initialSum: 10000,
   monthlyDeposit: 500,
-  annualGrowthRate: 0.07,
   years: 10,
+  growth: { mode: 'fixed', annualGrowthRate: 0.07 },
 };

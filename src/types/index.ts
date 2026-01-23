@@ -1,8 +1,21 @@
+export interface FixedGrowthConfig {
+  mode: 'fixed';
+  annualGrowthRate: number; // decimal (0.07 = 7%)
+}
+
+export interface SP500GrowthConfig {
+  mode: 'sp500';
+  startYear: number;
+  endYear: number;
+}
+
+export type GrowthConfig = FixedGrowthConfig | SP500GrowthConfig;
+
 export interface UserInputs {
   initialSum: number;
   monthlyDeposit: number;
-  annualGrowthRate: number; // decimal (0.07 = 7%)
   years: number;
+  growth: GrowthConfig;
 }
 
 export interface System1Config {

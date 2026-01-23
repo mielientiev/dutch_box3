@@ -34,7 +34,7 @@ function App() {
             Dutch Tax Calculator
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Compare 3 Dutch tax regimes and optimize your investment strategy
+            Compare 3 tax regimes
           </p>
         </header>
 

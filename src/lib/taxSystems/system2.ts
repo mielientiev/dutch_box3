@@ -1,8 +1,10 @@
 import { UserInputs, System2Config, System2Result } from '../../types';
+import { createGrowthResolver } from '../growthResolver';
 
 export function calculateSystem2(inputs: UserInputs, config: System2Config): System2Result[] {
   const results: System2Result[] = [];
   let currentBalance = inputs.initialSum;
+  const growthResolver = createGrowthResolver(inputs.growth);
 
   // Calculate total invested capital (initial + all monthly deposits)
   const totalInvested = inputs.initialSum + (inputs.monthlyDeposit * 12 * inputs.years);
@@ -12,7 +14,8 @@ export function calculateSystem2(inputs: UserInputs, config: System2Config): Sys
     const deposits = inputs.monthlyDeposit * 12;
 
     // Apply growth
-    const growth = startBalance * inputs.annualGrowthRate;
+    const growthRate = growthResolver.getRate(year);
+    const growth = startBalance * growthRate;
     currentBalance = startBalance + growth + deposits;
 
     // Track invested capital at each year
