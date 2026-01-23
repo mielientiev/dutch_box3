@@ -190,7 +190,7 @@ export function InputPanel({
             Fixed Rate
           </button>
           <button
-            onClick={() => updateGrowthConfig({ mode: 'sp500', startYear: 2010, endYear: 2020 })}
+            onClick={() => updateGrowthConfig({ mode: 'sp500', startYear: 2010, endYear: 2026 })}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               inputs.growth.mode === 'sp500'
                 ? 'bg-violet-500 text-white'
@@ -347,12 +347,28 @@ export function InputPanel({
               </div>
               <div className="space-y-2">
                 <label className="label text-slate-400">Persons</label>
-                <NumberInput
-                  value={config.system3.persons}
-                  onChange={(v) => updateSystem3Config('persons', v)}
-                  min="1"
-                  max="10"
-                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => updateSystem3Config('persons', 1)}
+                    className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      config.system3.persons === 1
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    1
+                  </button>
+                  <button
+                    onClick={() => updateSystem3Config('persons', 2)}
+                    className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      config.system3.persons === 2
+                        ? 'bg-amber-500 text-white'
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    2
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <label className="label text-slate-400">Fictional Return Rate (%)</label>

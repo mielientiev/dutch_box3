@@ -65,7 +65,7 @@ export const defaultTaxSystemsConfig: TaxSystemsConfig = {
   },
   system3: {
     taxFreeWealthPerPerson: 59357,
-    persons: 1,
+    persons: 2,
     fictionalReturnRate: 0.06,
     taxRate: 0.36,
   },
