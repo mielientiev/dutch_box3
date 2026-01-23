@@ -1,0 +1,67 @@
+export interface UserInputs {
+  initialSum: number;
+  monthlyDeposit: number;
+  annualGrowthRate: number; // decimal (0.07 = 7%)
+  years: number;
+}
+
+export interface System1Config {
+  taxRate: number;          // default 0.36
+  taxFreeAllowance: number; // default 1800
+}
+
+export interface System2Config {
+  taxRate: number;          // default 0.36
+}
+
+export interface System3Config {
+  taxFreeWealthPerPerson: number; // default 59357
+  persons: number;                // default 1
+  fictionalReturnRate: number;    // default 0.06
+  taxRate: number;                // default 0.36
+}
+
+export interface TaxSystemsConfig {
+  system1: System1Config;
+  system2: System2Config;
+  system3: System3Config;
+}
+
+export interface YearlyResult {
+  year: number;
+  startBalance: number;
+  deposits: number;
+  grossBalance: number;
+  taxPaid: number;
+  endBalance: number;
+}
+
+export interface System1Result extends YearlyResult {
+  grossProfit: number;
+  accumulatedLossBucket: number;
+  taxableIncome: number;
+}
+
+export interface System2Result extends YearlyResult {
+  investedCapital: number;
+  deferredTaxLiability: number;
+}
+
+export interface System3Result extends YearlyResult {
+  assetValue: number;
+  taxFreeThreshold: number;
+  fictionalReturn: number;
+}
+
+export interface SimulationOutput {
+  benchmark: YearlyResult[];
+  system1: System1Result[];
+  system2: System2Result[];
+  system3: System3Result[];
+  summary: {
+    benchmark: { finalBalance: number };
+    system1: { finalBalance: number; totalTaxPaid: number; efficiencyScore: number };
+    system2: { finalBalance: number; totalTaxPaid: number; efficiencyScore: number };
+    system3: { finalBalance: number; totalTaxPaid: number; efficiencyScore: number };
+  };
+}
