@@ -21,6 +21,7 @@ export interface UserInputs {
 export interface System1Config {
   taxRate: number;          // default 0.36
   taxFreeAllowance: number; // default 1800
+  lossThreshold: number;    // default 500 — losses ≤ threshold are written off, losses > threshold carry forward in full
 }
 
 export interface System2Config {

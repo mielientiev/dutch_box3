@@ -22,14 +22,14 @@ export function SummaryTable({ results }: SummaryTableProps) {
     return (
       <div className="card p-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-xl bg-slate-700/50">
-            <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="p-2 rounded-xl bg-surface-hover/50">
+            <svg className="w-6 h-6 text-content-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-semibold text-white">Simulation Results</h2>
+          <h2 className="text-2xl font-semibold text-content">Simulation Results</h2>
         </div>
-        <p className="text-slate-400">Run a simulation to see results.</p>
+        <p className="text-content-muted">Run a simulation to see results.</p>
       </div>
     );
   }
@@ -51,7 +51,7 @@ export function SummaryTable({ results }: SummaryTableProps) {
       ),
     },
     {
-      name: 'System 1 (Unrealized)',
+      name: 'Box 3 (2028), Unrealized Tax',
       color: 'bg-violet-500',
       shadow: 'shadow-violet-500/50',
       finalBalance: summary.system1.finalBalance,
@@ -64,7 +64,7 @@ export function SummaryTable({ results }: SummaryTableProps) {
       ),
     },
     {
-      name: 'System 2 (Realized)',
+      name: 'Capital Gain Tax (Realized)',
       color: 'bg-emerald-500',
       shadow: 'shadow-emerald-500/50',
       finalBalance: summary.system2.finalBalance,
@@ -77,7 +77,7 @@ export function SummaryTable({ results }: SummaryTableProps) {
       ),
     },
     {
-      name: 'System 3 (Wealth)',
+      name: 'Box 3 (Fictitious Return)',
       color: 'bg-amber-500',
       shadow: 'shadow-amber-500/50',
       finalBalance: summary.system3.finalBalance,
@@ -94,18 +94,18 @@ export function SummaryTable({ results }: SummaryTableProps) {
   return (
     <div className="card p-8">
       <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 rounded-xl bg-slate-700/50">
-          <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="p-2 rounded-xl bg-surface-hover/50">
+          <svg className="w-6 h-6 text-content-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
         </div>
-        <h2 className="text-2xl font-semibold text-white">Simulation Summary</h2>
+        <h2 className="text-2xl font-semibold text-content">Simulation Summary</h2>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700">
+            <tr className="border-b border-th-border">
               <th className="table-header pl-4">System</th>
               <th className="table-header text-right pr-4">Final Net Balance</th>
               <th className="table-header text-right pr-4">Total Tax Paid</th>
@@ -120,16 +120,16 @@ export function SummaryTable({ results }: SummaryTableProps) {
                     <div className={`p-2 rounded-lg ${row.color} ${row.shadow}`}>
                       {row.icon}
                     </div>
-                    <span className="font-medium text-white">{row.name}</span>
+                    <span className="font-medium text-content">{row.name}</span>
                   </div>
                 </td>
                 <td className="table-cell text-right pr-4">
-                  <span className="text-lg font-bold text-white">
+                  <span className="text-lg font-bold text-content">
                     {formatCurrency(row.finalBalance)}
                   </span>
                 </td>
                 <td className="table-cell text-right pr-4">
-                  <span className={row.totalTaxPaid > 0 ? 'text-red-400' : 'text-slate-500'}>
+                  <span className={row.totalTaxPaid > 0 ? 'text-red-400' : 'text-content-dimmed'}>
                     {formatCurrency(row.totalTaxPaid)}
                   </span>
                 </td>

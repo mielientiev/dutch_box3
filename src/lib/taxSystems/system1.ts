@@ -26,8 +26,12 @@ export function calculateSystem1(inputs: UserInputs, config: System1Config): Sys
     let taxableIncome = 0;
 
     if (grossProfit < 0) {
-      // Loss this year - add to loss bucket
-      accumulatedLossBucket += Math.abs(grossProfit);
+      // Loss this year - only carry forward if loss exceeds threshold
+      const absLoss = Math.abs(grossProfit);
+      if (absLoss > config.lossThreshold) {
+        accumulatedLossBucket += absLoss;
+      }
+      // else: loss ≤ threshold, written off entirely
       taxableIncome = 0;
     } else {
       // Gain this year - offset with loss bucket

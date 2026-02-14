@@ -3,22 +3,61 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Dark theme (default) */
+    --bg-base-from: 15 23 42;
+    --bg-base-via: 30 41 59;
+    --bg-base: 15 23 42;
+    --bg-card: 30 41 59;
+    --bg-elevated: 15 23 42;
+    --bg-hover: 51 65 85;
+    --bg-active: 51 65 85;
+    --border: 51 65 85;
+    --border-light: 71 85 105;
+    --text: 255 255 255;
+    --text-secondary: 203 213 225;
+    --text-muted: 148 163 184;
+    --text-dimmed: 100 116 139;
+  }
+
+  .light {
+    --bg-base-from: 248 250 252;
+    --bg-base-via: 255 255 255;
+    --bg-base: 248 250 252;
+    --bg-card: 255 255 255;
+    --bg-elevated: 241 245 249;
+    --bg-hover: 226 232 240;
+    --bg-active: 226 232 240;
+    --border: 226 232 240;
+    --border-light: 203 213 225;
+    --text: 15 23 42;
+    --text-secondary: 51 65 85;
+    --text-muted: 100 116 139;
+    --text-dimmed: 148 163 184;
+  }
+
   body {
-    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen;
+    background: linear-gradient(
+      to bottom right,
+      rgb(var(--bg-base-from)),
+      rgb(var(--bg-base-via)),
+      rgb(var(--bg-base-from))
+    );
+    @apply min-h-screen;
   }
 
   * {
-    @apply border-slate-700;
+    border-color: rgb(var(--border));
   }
 }
 
 @layer components {
   .card {
-    @apply bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl;
+    @apply bg-surface-card/50 backdrop-blur-xl border border-th-border/50 rounded-2xl shadow-2xl;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 bg-surface-elevated/50 border border-th-border-light rounded-xl text-content placeholder-content-muted focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200;
   }
 
   .btn-primary {
@@ -26,22 +65,22 @@
   }
 
   .btn-secondary {
-    @apply text-slate-300 hover:text-white transition-colors duration-200;
+    @apply text-content-secondary hover:text-content transition-colors duration-200;
   }
 
   .label {
-    @apply block text-sm font-medium text-slate-300 mb-2;
+    @apply block text-sm font-medium text-content-secondary mb-2;
   }
 
   .table-header {
-    @apply text-left py-3 px-4 font-semibold text-slate-300 border-b border-slate-700;
+    @apply text-left py-3 px-4 font-semibold text-content-secondary border-b border-th-border;
   }
 
   .table-cell {
-    @apply py-3 px-4 text-slate-300 border-b border-slate-700/50;
+    @apply py-3 px-4 text-content-secondary border-b border-th-border/50;
   }
 
   .table-row {
-    @apply hover:bg-slate-700/30 transition-colors duration-150;
+    @apply hover:bg-surface-hover/30 transition-colors duration-150;
   }
 }

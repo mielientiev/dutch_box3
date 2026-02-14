@@ -59,6 +59,7 @@ export const defaultTaxSystemsConfig: TaxSystemsConfig = {
   system1: {
     taxRate: 0.36,
     taxFreeAllowance: 1800,
+    lossThreshold: 500,
   },
   system2: {
     taxRate: 0.36,
