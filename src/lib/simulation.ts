@@ -3,6 +3,7 @@ import { calculateBenchmark } from './benchmark';
 import { calculateSystem1 } from './taxSystems/system1';
 import { calculateSystem2 } from './taxSystems/system2';
 import { calculateSystem3 } from './taxSystems/system3';
+import { computeStockTracking } from './stockTracker';
 
 export function runSimulation(inputs: UserInputs, config: TaxSystemsConfig): SimulationOutput {
   // Run all simulations
@@ -26,11 +27,16 @@ export function runSimulation(inputs: UserInputs, config: TaxSystemsConfig): Sim
   const system3TotalTax = system3.reduce((sum, r) => sum + r.taxPaid, 0);
   const system3Efficiency = (system3FinalBalance / benchmarkFinalBalance) * 100;
 
+  const stockTracking = inputs.growth.mode === 'sp500'
+    ? computeStockTracking(inputs, { benchmark, system1, system2, system3 })
+    : undefined;
+
   return {
     benchmark,
     system1,
     system2,
     system3,
+    stockTracking,
     summary: {
       benchmark: {
         finalBalance: benchmarkFinalBalance,

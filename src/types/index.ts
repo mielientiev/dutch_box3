@@ -67,6 +67,24 @@ export interface System3Result extends YearlyResult {
   fictionalReturn: number;
 }
 
+export interface StockYearData {
+  year: number;
+  calendarYear: number;
+  stockPrice: number;
+  sharesOwned: number;
+  sharesBought: number;
+  sharesSold: number;
+}
+
+export interface StockTracking {
+  initialPrice: number;
+  initialShares: number;
+  benchmark: StockYearData[];
+  system1: StockYearData[];
+  system2: StockYearData[];
+  system3: StockYearData[];
+}
+
 export interface SimulationOutput {
   benchmark: YearlyResult[];
   system1: System1Result[];
@@ -78,4 +96,5 @@ export interface SimulationOutput {
     system2: { finalBalance: number; totalTaxPaid: number; efficiencyScore: number };
     system3: { finalBalance: number; totalTaxPaid: number; efficiencyScore: number };
   };
+  stockTracking?: StockTracking;
 }

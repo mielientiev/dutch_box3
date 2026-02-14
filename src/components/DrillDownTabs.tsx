@@ -37,6 +37,8 @@ export function DrillDownTabs({ results }: DrillDownTabsProps) {
     );
   }
 
+  const st = results.stockTracking;
+
   return (
     <div className="card p-8">
       <div className="flex items-center gap-3 mb-8">
@@ -68,10 +70,10 @@ export function DrillDownTabs({ results }: DrillDownTabsProps) {
 
       {/* Tab Content */}
       <div className={`animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-        {activeTab === 'comparison' && <ComparisonMatrix results={results} />}
-        {activeTab === 'system1' && <System1Detail results={results.system1} />}
-        {activeTab === 'system2' && <System2Detail results={results.system2} />}
-        {activeTab === 'system3' && <System3Detail results={results.system3} />}
+        {activeTab === 'comparison' && <ComparisonMatrix results={results} stockTracking={st} />}
+        {activeTab === 'system1' && <System1Detail results={results.system1} stockData={st?.system1} />}
+        {activeTab === 'system2' && <System2Detail results={results.system2} stockData={st?.system2} />}
+        {activeTab === 'system3' && <System3Detail results={results.system3} stockData={st?.system3} />}
       </div>
     </div>
   );
